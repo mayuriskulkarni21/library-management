@@ -1,15 +1,24 @@
 const express = require('express');
-const moogoose = require('mongoose');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+require('./models/Forms');
 
 const app = express();
 
-moogoose.Promise = global.Promise;
-moogoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/library-management');
+require('./routes/formRoutes')(app);
+
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost:27017/form-builder`);
 
 app.use(bodyParser.json());
 
+app.use('/', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Headers: Content-Type');
+    next();
+});
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT , ()=>{
-    console.log(`App  running on port ${PORT}`);
-})
+app.listen(PORT, () => {
+    console.log(`app running on port ${PORT}`)
+});

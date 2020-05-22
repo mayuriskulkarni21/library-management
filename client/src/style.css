@@ -1,0 +1,21 @@
+.create-form {
+    margin: 5% 25% 0 25%;
+    border: 1px solid;
+    border-radius: 50px;
+    padding: 5%;
+}
+.popover .arrow {
+    display: none !important;
+}
+.popover {
+    max-width: 85% !important;
+    width: 85% !important;
+    height: 75% !important;
+    margin: 5%;
+}
+.dropdown-toggle{
+    width: 195px;
+}
+.buttons{
+    width: 125px;
+}
