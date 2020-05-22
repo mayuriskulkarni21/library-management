@@ -1,12 +1,13 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import { constants } from '../constants/index.js';
 import { getForm } from './actions.js';
+import { endpoints } from '../constants/endpoints.js';
 import Axios from 'axios';
 import '@babel/polyfill';
 
-function* fetchHeadlines(action) {
+function* postFormData(action) {
     try {
-        let result = yield Axios.post('http://localhost:5000/api/newform', action.data)
+        let result = yield Axios.post(endpoints.SAVE_FORM, action.data)
             .then(res => {
                 return res.data;
             })
@@ -21,7 +22,7 @@ function* fetchHeadlines(action) {
 }
 
 function* mySaga() {
-    yield takeEvery(constants.SAVE_FORM, fetchHeadlines);
+    yield takeEvery(constants.SAVE_FORM, postFormData);
 }
 
 export default mySaga;

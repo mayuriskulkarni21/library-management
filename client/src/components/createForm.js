@@ -1,12 +1,11 @@
 import React from 'react';
-// import { Form } from 'react-bootstrap';
 import ModalPopover from './modalPopover.js';
 import { Modal, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import { saveForm } from '../store/actions.js';
 import { bindActionCreators } from 'redux';
 
-class CreateForm extends React.Component {
+export class CreateForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

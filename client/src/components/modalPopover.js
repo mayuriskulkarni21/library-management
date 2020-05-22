@@ -24,8 +24,11 @@ class ModalPopover extends React.Component {
             questionSet: {
                 question: '',
                 ansType: 'Text'
-            }
+            },
+            selectedType: 'Text',
+            multichoice: []
         }
+        this.handleAnswer = this.handleAnswer.bind(this);
     }
 
     toggleDropdown() {
@@ -38,11 +41,23 @@ class ModalPopover extends React.Component {
         let questionSet = this.state.questionSet;
         if (typeof (e) === 'string') {
             questionSet.ansType = e;
+            this.setState({ selectedType: e });
         } else {
             e.preventDefault();
             questionSet.question = e.target.value;
         }
         this.setState({ questionSet });
+    }
+
+    handleAnswer() {
+        const { selectedType } = this.state;
+        if (selectedType === 'Multichoice Checkbox') {
+            return (
+                <FormGroup>
+                    <Input type="text" name="checkbox" value={this.state.question} onChange={(e) => this.handleChange(e)} placeholder="Enter question here..." />
+                </FormGroup>
+            )
+        }
     }
 
     handleSubmit(e) {
@@ -69,16 +84,16 @@ class ModalPopover extends React.Component {
                         </FormGroup>
                         <FormGroup>
                             <Label >Answer Type<span className="text-danger">*</span></Label>
-                            <Dropdown isOpen={this.state.dropdownOpen} toggle={() => this.toggleDropdown()}>
+                            <Dropdown disabled={this.state.questionSet.question.length === 0} isOpen={this.state.dropdownOpen} toggle={() => this.toggleDropdown()}>
                                 <DropdownToggle caret>{this.state.questionSet.ansType}</DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem name="ansType" onClick={() => this.handleChange('Text')} >Text</DropdownItem>
-                                    <DropdownItem name="ansType" onClick={() => this.handleChange('Multichoice')} > Multichoice</DropdownItem>
-                                    <DropdownItem name="ansType" onClick={() => this.handleChange('Checkbox')} > Checkbox</DropdownItem>
+                                    <DropdownItem name="ansType" onClick={() => this.handleChange('Multichoice Checkbox')} > Multichoice</DropdownItem>
                                     <DropdownItem name="ansType" onClick={() => this.handleChange('Single Select radio')} > Single Select radio</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </FormGroup>
+                        {!this.state.questionSet.question.length === 0 && this.handleAnswer()}
                         <Button disabled={this.state.questionSet.question.length === 0} color="primary mr-2" type="submit">Add Button</Button>
                         <Button color="secondary" onClick={() => this.props.toggle()}>Cancel</Button>
                     </Form>
