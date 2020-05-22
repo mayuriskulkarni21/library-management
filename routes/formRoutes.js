@@ -8,14 +8,19 @@ module.exports = (app) => {
         return res.status(200).send(forms);
     });
 
-    app.post(`/api/create`, async (req, res) => {
-        console.log("req:", req);
-        console.log("res:", res);
-        // let form = await Forms.create(req.body);
-        // return res.status(201).send({
-        //     error: false,
-        //     form
-        // })
+    app.post(`/api/newform`, async (req, res) => {
+        let form = await Forms.create(req.body);
+        if (form) {
+            return res.status(201).send({
+                error: false,
+                form
+            })
+        } else {
+            return res.status(500).send({
+                error: true,
+                message: "Internal Server Error"
+            })
+        }
     })
 
     // app.put(`/api/product/:id`, async (req, res) => {

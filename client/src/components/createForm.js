@@ -12,7 +12,7 @@ class CreateForm extends React.Component {
         this.state = {
             modal: false,
             questionSet: [],
-            formName: ''
+            name: ''
         }
         this.getQuestionSet = this.getQuestionSet.bind(this);
     }
@@ -30,15 +30,14 @@ class CreateForm extends React.Component {
     }
 
     save() {
-        console.log("SAVE", this.props);
-        const { formName, questionSet } = this.state;
-        let formData = { formName, questionSet };
+        const { name, questionSet } = this.state;
+        let formData = { name, questionSet, created_at: new Date() };
         this.props.saveForm(formData);
     }
 
     handleChange(e) {
         e.preventDefault();
-        this.setState({ formName: e.target.value });
+        this.setState({ name: e.target.value });
     }
 
     render() {
@@ -49,19 +48,19 @@ class CreateForm extends React.Component {
                 </FormGroup>
                 <FormGroup controlId="formBasicEmail">
                     <Label>Form Name<span className="text-danger">*</span></Label>
-                    <Input type="formName" value={this.state.formName} placeholder="Enter form name here..." onChange={(e) => this.handleChange(e)} />
+                    <Input type="name" value={this.state.name} placeholder="Enter form name here..." onChange={(e) => this.handleChange(e)} />
                 </FormGroup>
-                {
+                {/* {
                     this.state.questionSet.length !== 0 &&
                     this.state.questionSet.map(question => {
                         console.log("---", question)
                     })
-                }
-                <Button className="buttons p-1" disabled={this.state.formName.length === 0} color="primary" onClick={() => this.toggle()}>Add Question</Button>
+                } */}
+                <Button className="buttons p-1" disabled={this.state.name.length === 0} color="primary" onClick={() => this.toggle()}>Add Question</Button>
                 <Modal isOpen={this.state.modal} toggle={() => this.toggle()} >
                     <ModalPopover getQuestion={this.getQuestionSet} toggle={() => this.toggle()} />
                 </Modal>
-                <Button className="buttons ml-2 p-1" color="secondary" onClick={() => this.save()}>Save</Button>
+                <Button className="buttons ml-2 p-1" disabled={this.state.name.length === 0} color="secondary" onClick={() => this.save()}>Save</Button>
             </Form>
         )
     }
@@ -69,7 +68,7 @@ class CreateForm extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        formDetails: state.formDetails
+        formData: state.formReducer.formData
     }
 }
 

@@ -2,9 +2,9 @@ import { constants } from '../../constants/index.js';
 
 export default (state = {}, action) => {
     switch (action.type) {
-        case constants.SIMPLE_ACTION:
+        case constants.GET_FORM:
             return {
-                result: action.payload
+                formData: action.data
             }
         default:
             return state

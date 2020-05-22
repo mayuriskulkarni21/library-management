@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const formSchema = new Schema({
     name: String,
-    description: String,
+    questionSet: Array,
 })
 
 mongoose.model('forms', formSchema);
