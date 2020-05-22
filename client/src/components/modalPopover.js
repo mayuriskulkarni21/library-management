@@ -1,7 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { getQuestionsSet } from '../store/actions.js';
-import { bindActionCreators } from 'redux';
+import DocumentInput from './mulltiChoice.js';
 import {
     Dropdown,
     DropdownToggle,
@@ -26,9 +24,9 @@ class ModalPopover extends React.Component {
                 ansType: 'Text'
             },
             selectedType: 'Text',
-            multichoice: []
+            multichoice: [],
+            choices: {}
         }
-        this.handleAnswer = this.handleAnswer.bind(this);
     }
 
     toggleDropdown() {
@@ -49,20 +47,26 @@ class ModalPopover extends React.Component {
         this.setState({ questionSet });
     }
 
-    handleAnswer() {
-        const { selectedType } = this.state;
-        if (selectedType === 'Multichoice Checkbox') {
-            return (
-                <FormGroup>
-                    <Input type="text" name="checkbox" value={this.state.question} onChange={(e) => this.handleChange(e)} placeholder="Enter question here..." />
-                </FormGroup>
-            )
-        }
+
+    getMultiChoice(e) {
+        const name = e.target.name;
+        const value = e.target.value;
+        const { choices } = this.state;
+        choices[name] = value;
+        this.setState({ choices });
+
+    }
+
+    add() {
+        const { multichoice } = this.state;
+        const value = multichoice.concat(<DocumentInput getMultiChoice={(e) => this.getMultiChoice(e)} index={multichoice.length} />);
+        this.setState({ multichoice: value });
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        let { questionSet } = this.state;
+        let { questionSet, choices } = this.state;
+        questionSet['choices'] = choices;
         this.props.getQuestion(questionSet);
         let resetQuestionSet = {
             question: '',
@@ -72,7 +76,16 @@ class ModalPopover extends React.Component {
         this.props.toggle();
     }
 
+    componentDidMount() {
+        const { multichoice } = this.state;
+        const value = multichoice.concat(<DocumentInput getMultiChoice={(e) => this.getMultiChoice(e)} index={0} />);
+        this.setState({ multichoice: value });
+    }
+
     render() {
+        const documents = this.state.multichoice.map((Element, i) => {
+            return Element;
+        });
         return (
             <>
                 < ModalHeader toggle={() => this.props.toggle()}>Add Questions</ModalHeader >
@@ -88,12 +101,20 @@ class ModalPopover extends React.Component {
                                 <DropdownToggle caret>{this.state.questionSet.ansType}</DropdownToggle>
                                 <DropdownMenu>
                                     <DropdownItem name="ansType" onClick={() => this.handleChange('Text')} >Text</DropdownItem>
-                                    <DropdownItem name="ansType" onClick={() => this.handleChange('Multichoice Checkbox')} > Multichoice</DropdownItem>
+                                    <DropdownItem name="ansType" onClick={() => this.handleChange('Multichoice Checkbox')} > Multichoice Checkbox</DropdownItem>
                                     <DropdownItem name="ansType" onClick={() => this.handleChange('Single Select radio')} > Single Select radio</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </FormGroup>
-                        {!this.state.questionSet.question.length === 0 && this.handleAnswer()}
+                        {
+                            (this.state.selectedType === 'Multichoice Checkbox') &&
+                            <>
+                                <Button className="mb-1" onClick={() => this.add()}>Add choice</Button>
+                                <div className="inputs">
+                                    {documents}
+                                </div>
+                            </>
+                        }
                         <Button disabled={this.state.questionSet.question.length === 0} color="primary mr-2" type="submit">Add Button</Button>
                         <Button color="secondary" onClick={() => this.props.toggle()}>Cancel</Button>
                     </Form>
@@ -103,19 +124,4 @@ class ModalPopover extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        formDetails: state.formDetails
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        getQuestionsSet: bindActionCreators(getQuestionsSet, dispatch),
-    }
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ModalPopover);
+export default ModalPopover;

@@ -6,6 +6,10 @@ export default (state = {}, action) => {
             return {
                 formData: action.data
             }
+        case constants.FORM_LIST:
+            return {
+                formList: action.data
+            }
         default:
             return state
     }

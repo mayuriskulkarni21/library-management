@@ -2,8 +2,9 @@ import React from 'react';
 import ModalPopover from './modalPopover.js';
 import { Modal, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { connect } from 'react-redux';
-import { saveForm } from '../store/actions.js';
+import { saveForm, getFormList } from '../store/actions.js';
 import { bindActionCreators } from 'redux';
+import ShowFormList from './showFormList.js';
 
 export class CreateForm extends React.Component {
     constructor(props) {
@@ -14,6 +15,8 @@ export class CreateForm extends React.Component {
             name: ''
         }
         this.getQuestionSet = this.getQuestionSet.bind(this);
+        this.showForm = this.showForm.bind(this);
+        this.getMultiChoice = this.getMultiChoice.bind(this);
     }
 
     toggle() {
@@ -39,7 +42,34 @@ export class CreateForm extends React.Component {
         this.setState({ name: e.target.value });
     }
 
+    getMultiChoice(choices) {
+        let keys = Object.keys(choices);
+        return keys.map((k, i) => {
+            return (<div>
+                <input type="checkbox" /><span>{'  '}{choices[k]}</span>
+            </div >)
+        })
+    }
+
+    showForm(question, i) {
+        let keyval = `answer${i}`;
+        return (
+            <FormGroup controlId="formBasicEmail">
+                <span className="font-weight-bold">Q.</span><span>{'  '}{question.question}</span>
+                {question.ansType === "Text" && <Input type="name" name={keyval} />}
+                {question.ansType === "Multichoice Checkbox" && this.getMultiChoice(question.choices)}
+                {question.ansType === "Single Select radio" && <><span>{'  '}</span><input type="radio" /></>}
+            </FormGroup>
+        )
+    }
+
+    getFormList() {
+        this.props.getFormList();
+        return <ShowFormList />
+    }
+
     render() {
+        console.log("formData:", this.props.formData)
         return (
             <Form className="create-form">
                 <FormGroup controlId="formBasicEmail">
@@ -47,19 +77,24 @@ export class CreateForm extends React.Component {
                 </FormGroup>
                 <FormGroup controlId="formBasicEmail">
                     <Label>Form Name<span className="text-danger">*</span></Label>
-                    <Input type="name" value={this.state.name} placeholder="Enter form name here..." onChange={(e) => this.handleChange(e)} />
+                    <Input className="adjustWidth" type="name" value={this.state.name} placeholder="Enter form name here..." onChange={(e) => this.handleChange(e)} />
                 </FormGroup>
-                {/* {
+                {
                     this.state.questionSet.length !== 0 &&
-                    this.state.questionSet.map(question => {
-                        console.log("---", question)
+                    this.state.questionSet.map((question, i) => {
+                        return (
+                            this.showForm(question, i)
+                        )
                     })
-                } */}
-                <Button className="buttons p-1" disabled={this.state.name.length === 0} color="primary" onClick={() => this.toggle()}>Add Question</Button>
-                <Modal isOpen={this.state.modal} toggle={() => this.toggle()} >
-                    <ModalPopover getQuestion={this.getQuestionSet} toggle={() => this.toggle()} />
-                </Modal>
-                <Button className="buttons ml-2 p-1" disabled={this.state.name.length === 0} color="secondary" onClick={() => this.save()}>Save</Button>
+                }
+                <div className="adjustWidth d-flex">
+                    <Button className="buttons p-1 questions" disabled={this.state.name.length === 0} color="primary" onClick={() => this.toggle()}>Add Question</Button>
+                    <Modal isOpen={this.state.modal} toggle={() => this.toggle()} >
+                        <ModalPopover getQuestion={this.getQuestionSet} toggle={() => this.toggle()} />
+                    </Modal>
+                    <Button className="buttons ml-2 p-1 save" disabled={this.state.name.length === 0} color="secondary" onClick={() => this.save()}>Save</Button>
+                </div>
+                <Button className="buttons mt-2 p-1 adjustWidth" color="success" onClick={() => this.getFormList()}>Existing form list</Button>
             </Form>
         )
     }
@@ -74,6 +109,7 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps(dispatch) {
     return {
         saveForm: bindActionCreators(saveForm, dispatch),
+        getFormList: bindActionCreators(getFormList, dispatch)
     }
 }
 

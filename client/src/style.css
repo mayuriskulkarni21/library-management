@@ -1,5 +1,5 @@
 .create-form {
-    margin: 5% 25% 0 25%;
+    margin: 5% 30% 0 30%;
     border: 1px solid;
     border-radius: 50px;
     padding: 5%;
@@ -18,4 +18,14 @@
 }
 .buttons{
     width: 125px;
+}
+.adjustWidth{
+    width: 100%;
+}
+.save{
+    float: right;
+    width: 47%;
+}
+.questions{
+    width: 50%;
 }

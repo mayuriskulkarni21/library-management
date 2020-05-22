@@ -10,6 +10,11 @@ export const getForm = (data) => ({
     data
 });
 
-export const getQuestionsSet = () => ({
-    type: constants.SAVE_FORM,
+export const getFormList = () => ({
+    type: constants.GET_FORM_LIST,
 });
+
+export const formList = (data) => ({
+    type: constants.FORM_LIST,
+    data
+})

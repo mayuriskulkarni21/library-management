@@ -3,9 +3,18 @@ const Forms = mongoose.model('forms');
 
 module.exports = (app) => {
 
+    const error = {
+        error: true,
+        message: "Internal Server Error"
+    }
     app.get(`/api/form`, async (req, res) => {
         let forms = await Forms.find();
-        return res.status(200).send(forms);
+        console.log("forms:", forms);
+        if (forms) {
+            return res.status(200).send(forms);
+        } else {
+            return res.status(500).send(error);
+        }
     });
 
     app.post(`/api/newform`, async (req, res) => {
@@ -16,10 +25,7 @@ module.exports = (app) => {
                 form
             })
         } else {
-            return res.status(500).send({
-                error: true,
-                message: "Internal Server Error"
-            })
+            return res.status(500).send(error);
         }
     })
 
