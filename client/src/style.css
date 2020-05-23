@@ -13,7 +13,7 @@
     height: 75% !important;
     margin: 5%;
 }
-.dropdown-toggle{
+.dropdown-toggle, .choice-button{
     width: 195px;
 }
 .buttons{
@@ -28,4 +28,7 @@
 }
 .questions{
     width: 50%;
+}
+.modal-dialog{
+    max-width: 575px !important;
 }

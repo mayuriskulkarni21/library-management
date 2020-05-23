@@ -9,7 +9,6 @@ module.exports = (app) => {
     }
     app.get(`/api/form`, async (req, res) => {
         let forms = await Forms.find();
-        console.log("forms:", forms);
         if (forms) {
             return res.status(200).send(forms);
         } else {
@@ -29,17 +28,20 @@ module.exports = (app) => {
         }
     })
 
-    // app.put(`/api/product/:id`, async (req, res) => {
-    //     const { id } = req.params;
+    app.get(`/api/form/:id`, async (req, res) => {
+        const { id } = req.params;
+        let form = await Forms.findById(id);
+        if (form) {
+            return res.status(200).send({
+                error: false,
+                form
+            })
+        }
+        else {
+            return res.status(500).send(error)
+        }
 
-    //     let product = await Product.findByIdAndUpdate(id, req.body);
-
-    //     return res.status(202).send({
-    //         error: false,
-    //         product
-    //     })
-
-    // });
+    });
 
     // app.delete(`/api/product/:id`, async (req, res) => {
     //     const { id } = req.params;

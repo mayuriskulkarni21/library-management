@@ -12,7 +12,12 @@ export class CreateForm extends React.Component {
         this.state = {
             modal: false,
             questionSet: [],
-            name: ''
+            name: '',
+            // formData: {},
+            productList: false,
+            formModal: false,
+            error: null,
+            addQuestion: null
         }
         this.getQuestionSet = this.getQuestionSet.bind(this);
         this.showForm = this.showForm.bind(this);
@@ -25,10 +30,16 @@ export class CreateForm extends React.Component {
         }));
     };
 
+    formList() {
+        this.setState(prevState => ({
+            formModal: !prevState.formModal
+        }));
+    }
+
     getQuestionSet(question) {
         let { questionSet } = this.state;
         questionSet.push(question);
-        this.setState({ questionSet });
+        this.setState({ questionSet, addQuestion: true });
     }
 
     save() {
@@ -52,6 +63,7 @@ export class CreateForm extends React.Component {
     }
 
     showForm(question, i) {
+        console.log("question:", question)
         let keyval = `answer${i}`;
         return (
             <FormGroup controlId="formBasicEmail">
@@ -65,15 +77,25 @@ export class CreateForm extends React.Component {
 
     getFormList() {
         this.props.getFormList();
-        return <ShowFormList />
+        this.setState({ productList: true });
+        this.formList();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps !== this.props && nextProps.formData && nextProps.formData !== this.props.formData) {
+            this.setState({ error: nextProps.formData.error })
+        }
     }
 
     render() {
-        console.log("formData:", this.props.formData)
         return (
             <Form className="create-form">
                 <FormGroup controlId="formBasicEmail">
                     <Label><h2>Create Form</h2></Label>
+                    {this.state.error === false &&
+                        <p className="text-success">Form saved successfully!</p>}
+                    {(this.state.addQuestion === true && this.state.error !== false) &&
+                        <p className="text-success">Question added successfully!</p>}
                 </FormGroup>
                 <FormGroup controlId="formBasicEmail">
                     <Label>Form Name<span className="text-danger">*</span></Label>
@@ -95,7 +117,11 @@ export class CreateForm extends React.Component {
                     <Button className="buttons ml-2 p-1 save" disabled={this.state.name.length === 0} color="secondary" onClick={() => this.save()}>Save</Button>
                 </div>
                 <Button className="buttons mt-2 p-1 adjustWidth" color="success" onClick={() => this.getFormList()}>Existing form list</Button>
-            </Form>
+                <Modal isOpen={this.state.formModal} toggle={() => this.formList()} >
+                    <ShowFormList toggle={() => this.formList()} showForm={this.showForm} />
+                </Modal>
+                {/* {this.state.productList && <ShowFormList toggle={() => this.toggle()} />} */}
+            </Form >
         )
     }
 }

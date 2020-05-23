@@ -109,7 +109,7 @@ class ModalPopover extends React.Component {
                         {
                             (this.state.selectedType === 'Multichoice Checkbox') &&
                             <>
-                                <Button className="mb-1" onClick={() => this.add()}>Add choice</Button>
+                                <Button className="mb-1 choice-button" onClick={() => this.add()}>Add choice</Button>
                                 <div className="inputs">
                                     {documents}
                                 </div>

@@ -1,13 +1,52 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { saveForm, getFormList } from '../store/actions.js';
-import { bindActionCreators } from 'redux';
+import {
+    ModalHeader,
+    ModalBody,
+    Table,
+} from 'reactstrap';
 
-class ShowFormList extends React.Component {
+export class ShowFormList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modal: this.props.formModal
+        }
+        this.renderTableData = this.renderTableData.bind(this)
+    }
+
+    renderTableData() {
+        return this.props.formList && this.props.formList.map((form, index) => {
+            const { _id, name, created_at } = form;
+            return (
+                <tr key={_id}>
+                    <td>{name}</td>
+                    <td><a href={`http://localhost:5000/api/form/${_id}`} >{`/form/${_id}`}</a></td>
+                    <td>{created_at}</td>
+                </tr>
+            )
+        })
+    }
+
     render() {
-        console.log("formList...", this.props.formList)
         return (
-            <div></div>
+            < >
+                < ModalHeader toggle={() => this.props.toggle()}>Form List</ModalHeader >
+                <ModalBody>
+                    <Table id='form-list'>
+                        <thead>
+                            <tr>
+                                <th>Form Name</th>
+                                <th>Form URL</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.renderTableData()}
+                        </tbody>
+                    </Table>
+                </ModalBody>
+            </>
         )
     }
 }
