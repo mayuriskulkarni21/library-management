@@ -13,11 +13,11 @@ describe('<ShowFormList />', () => {
         const form = [{
             questionSet: [],
             name: 'form name',
-            created_at: new Date()
+            created_at: new Date(),
+            _id: 1
         }];
         let wrapper = shallow(<ShowFormList getMultiChoice={jest.fn()} formList={form} />);
         let instance = wrapper.instance();
         instance.renderTableData();
-        // expect(wrapper.state('inputVal')).toEqual('test');
     })
 });

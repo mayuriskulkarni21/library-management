@@ -118,7 +118,7 @@ export class CreateForm extends React.Component {
                 </div>
                 <Button className="buttons mt-2 p-1 adjustWidth" color="success" onClick={() => this.getFormList()}>Existing form list</Button>
                 <Modal isOpen={this.state.formModal} toggle={() => this.formList()} >
-                    <ShowFormList toggle={() => this.formList()} showForm={this.showForm} />
+                    <ShowFormList history={this.props.history} toggle={() => this.formList()} showForm={this.showForm} />
                 </Modal>
                 {/* {this.state.productList && <ShowFormList toggle={() => this.toggle()} />} */}
             </Form >

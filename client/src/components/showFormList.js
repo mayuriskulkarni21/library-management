@@ -15,13 +15,18 @@ export class ShowFormList extends React.Component {
         this.renderTableData = this.renderTableData.bind(this)
     }
 
+    showForm(e, _id) {
+        e.preventDefault();
+        this.props.history.push(`/form/${_id}`);
+    }
+
     renderTableData() {
         return this.props.formList && this.props.formList.map((form, index) => {
             const { _id, name, created_at } = form;
             return (
                 <tr key={_id}>
                     <td>{name}</td>
-                    <td><a href={`http://localhost:5000/api/form/${_id}`} >{`/form/${_id}`}</a></td>
+                    <td><a href={``} onClick={(e) => { this.showForm(e, _id) }} >{`/form/${_id}`}</a></td>
                     <td>{created_at}</td>
                 </tr>
             )
